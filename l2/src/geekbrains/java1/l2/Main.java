@@ -59,8 +59,9 @@ public class Main {
                 array6[i] = (int) (Math.random() * 20 - 10);
             }
             arrayShow(array6);
-            System.out.println("Attempt " + (j + 1) + ": " + balance(array6));
-            if(balance(array6)) break;
+            boolean result = balance(array6);
+            System.out.println("Attempt " + (j + 1) + ": " + result);
+            if(result) break;
         }
         System.out.print("\n");
 
@@ -136,6 +137,7 @@ public class Main {
         for (int i = 0; i < a.length; i++){
             sumRight -= a[i];
             sumLeft += a[i];
+            //System.out.println(sumLeft + " " + sumRight); //To check how it went
             if (sumLeft == sumRight) return true;
         }
         return false;
