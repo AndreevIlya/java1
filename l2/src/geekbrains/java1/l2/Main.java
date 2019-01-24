@@ -28,6 +28,17 @@ public class Main {
         }
         arrayShow(array3);
         System.out.print("\n");
+
+        //Task 4
+        System.out.println("Task 4");
+        int[][] array4 = new int[10][10];
+        for (int i =0; i < array4.length; i++){
+            array4[i][i] = 1;
+        }
+        for (int i =0; i < array4.length; i++){
+            arrayShow(array4[i]);
+        }
+        System.out.print("\n");
     }
     public static void arrayShow(int[] a){
         for (int i=0; i < a.length; i++){
