@@ -50,6 +50,19 @@ public class Main {
         System.out.println("Max: " + findMax(array5));
         System.out.println("Min: " + findMin(array5));
         System.out.print("\n");
+
+        //Task 6
+        System.out.println("Task 6");
+        int[] array6 = new int[20];
+        for( int j =0; j < 20; j++) {
+            for (int i = 0; i < array6.length; i++) {
+                array6[i] = (int) (Math.random() * 20 - 10);
+            }
+            arrayShow(array6);
+            System.out.println("Attempt " + (j + 1) + ": " + balance(array6));
+            if(balance(array6)) break;
+        }
+        System.out.print("\n");
     }
     public static void arrayShow(int[] a){
         for (int i = 0; i < a.length; i++){
@@ -82,7 +95,7 @@ public class Main {
         for (int i = 1; i < a.length; i++){
             if (b[i] > max) max = b[i];
         }
-        for (int i = 1; i < a.length; i++){
+        for (int i = 0; i < a.length; i++){
             if (a[i] > max) max = a[i];
         }
         return max;
@@ -97,9 +110,22 @@ public class Main {
         for (int i = 1; i < a.length; i++){
             if (b[i] < min) min = b[i];
         }
-        for (int i = 1; i < a.length; i++){
+        for (int i = 0; i < a.length; i++){
             if (a[i] < min) min = a[i];
         }
         return min;
+    }
+    public static boolean balance(int[] a){
+        int sumRight = 0,
+            sumLeft = 0;
+        for (int i = 0; i < a.length; i++){
+            sumRight += a[i];
+        }
+        for (int i = 0; i < a.length; i++){
+            sumRight -= a[i];
+            sumLeft += a[i];
+            if (sumLeft == sumRight) return true;
+        }
+        return false;
     }
 }
