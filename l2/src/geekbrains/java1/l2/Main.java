@@ -10,7 +10,15 @@ public class Main {
         arrayShow(zeroToOne(array1));
         System.out.print("\n");
 
-        
+        //Task 2
+        System.out.println("Task 2");
+        int[] array2 = new int[8];
+        array2[0] = 0;
+        for (int i =1; i < 8; i++){
+            array2[i] = array2[i-1] + 3;
+        }
+        arrayShow(array2);
+        System.out.print("\n");
     }
     public static void arrayShow(int[] a){
         for (int i=0; i < a.length; i++){
