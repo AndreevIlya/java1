@@ -63,6 +63,18 @@ public class Main {
             if(balance(array6)) break;
         }
         System.out.print("\n");
+
+        //Task 7 Positive n means a[0] -> a[n]
+        System.out.println("Task 7");
+        int[] array7 = new int[20];
+        int n = (int) (Math.random() * 200 - 100);
+        for (int i = 0; i < array7.length; i++) {
+            array7[i] = (int) (Math.random() * 20 - 10);
+        }
+        arrayShow(array7);
+        System.out.println("n = " + n);
+        arrayShow(slider(array7, n));
+        System.out.print("\n");
     }
     public static void arrayShow(int[] a){
         for (int i = 0; i < a.length; i++){
@@ -127,5 +139,63 @@ public class Main {
             if (sumLeft == sumRight) return true;
         }
         return false;
+    }
+    public static int[] slider(int[] a, int n){
+        int length = a.length,
+            half = length / 2;
+        if (n > 0){
+            while (n >= length) n -= length;
+            System.out.println("Modified n = " + n);
+            if (n == 0) return a;
+            int inter;
+            if (n <= half){
+                System.out.println("Path 1"); //To indicate which path went the calculation
+                for (int i = 0; i < n; i++){
+                    inter = a[length - 1];
+                    for (int j = length - 1; j > 0; j--){
+                        a[j] = a[j - 1];
+                    }
+                    a[0] = inter;
+                }
+            }else{
+                System.out.println("Path 2"); //To indicate which path went the calculation
+                n -= length;
+                for (int i = n; i < 0; i++){
+                    inter = a[0];
+                    for (int j = 0; j < length - 1; j++){
+                        a[j] = a[j + 1];
+                    }
+                    a[length - 1] = inter;
+                }
+            }
+        }else if (n < 0){
+            while (-n >= length) n += length;
+            System.out.println("Modified n = " + n);
+            if (n == 0) return a;
+            int inter;
+            if (-n <= half){
+                System.out.println("Path 3"); //To indicate which path went the calculation
+                for (int i = 0; i < n; i--){
+                    inter = a[0];
+                    for (int j = 0; j < length - 1; j++){
+                        a[j] = a[j + 1];
+                    }
+                    a[length - 1] = inter;
+                }
+            }else{
+                System.out.println("Path 4"); //To indicate which path went the calculation
+                n += length;
+                for (int i = n; i > 0; i--){
+                    inter = a[length - 1];
+                    for (int j = length - 1; j > 0; j--){
+                        a[j] = a[j - 1];
+                    }
+                    a[0] = inter;
+                }
+            }
+        }
+        return a;
+
+
     }
 }
