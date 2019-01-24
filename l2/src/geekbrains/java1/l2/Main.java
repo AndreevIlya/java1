@@ -19,6 +19,15 @@ public class Main {
         }
         arrayShow(array2);
         System.out.print("\n");
+
+        //Task 3
+        System.out.println("Task 3");
+        int[] array3 = {1,5,3,2,11,4,5,2,4,8,9,1};
+        for (int i =0; i < array3.length; i++){
+            if (array3[i] < 6) array3[i] *= 2;
+        }
+        arrayShow(array3);
+        System.out.print("\n");
     }
     public static void arrayShow(int[] a){
         for (int i=0; i < a.length; i++){
