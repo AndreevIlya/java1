@@ -1,10 +1,12 @@
 package geekbrains.java1.l3;
 
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
     private static Scanner scanner = new Scanner(System.in);
+    private static Random rand = new Random();
 
     public static void main(String[] args) {
         System.out.println("What game do u wanna play? #1 or #2?");
@@ -16,7 +18,6 @@ public class Main {
         scanner.close();
     }
     private static void doTask1(){
-        Random rand = new Random();
         int guessed,
             answer;
         byte attemptsRemain;
@@ -54,6 +55,33 @@ public class Main {
         }
     }
     private static void doTask2(){
-        
+        String[] words = {"apple", "orange", "lemon", "banana", "apricot", "avocado", "broccoli", "carrot", "cherry", "garlic", "grape", "melon", "leak", "kiwi", "mango", "mushroom", "nut", "olive", "pea", "peanut", "pear", "pepper", "pineapple", "pumpkin", "potato"};
+        String guessed, answer;
+        char[] firstLetters = new char[15];
+        guessed = words[rand.nextInt(words.length)];
+        System.out.println("Guess a word from a list:");
+        System.out.println(Arrays.toString(words));
+        while(true) {
+            answer = scanner.nextLine();
+            if (answer.equals(guessed)) {
+                System.out.printf("U won! Guessed was %s.\n", answer);
+                break;
+            } else {
+                for (int i = 0; i < firstLetters.length; i++) {
+                    firstLetters[i] = '#';
+                }
+                for (int i = 0; i < answer.length() && i < guessed.length(); i++) {
+                    if (answer.charAt(i) == guessed.charAt(i)) firstLetters[i] = guessed.charAt(i);
+                }
+                System.out.println("Guess in progress:");
+                wordParser(firstLetters);
+            }
+        }
+    }
+    private static void wordParser(char[] arr){
+        for (char c : arr) {
+            System.out.print(c);
+        }
+        System.out.println();
     }
 }
