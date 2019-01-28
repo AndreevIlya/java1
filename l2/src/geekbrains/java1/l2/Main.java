@@ -34,10 +34,9 @@ public class Main {
         int[][] array4 = new int[10][10];
         for (int i = 0; i < array4.length; i++){
             array4[i][i] = 1;
+            array4[array4.length - i -1][i] = 1;
         }
-        for (int i = 0; i < array4.length; i++){
-            arrayShow(array4[i]);
-        }
+        for(int[] z : array4)arrayShow(z);
         System.out.print("\n");
 
         //Task 5
@@ -100,44 +99,28 @@ public class Main {
     }
     public static int findMax(int[] a){
         int[] b = new int[a.length];
-        for (int i = 0; i < a.length; i++){
-            if (a[i] > 0) b[i] = -a[i];
-            else b[i] = a[i];
-        }
+        for (int i = 0; i < a.length; i++) b[i] = a[i] > 0 ? -a[i] : a[i];
         int max = b[0];
-        for (int i = 1; i < a.length; i++){
-            if (b[i] > max) max = b[i];
-        }
-        for (int i = 0; i < a.length; i++){
-            if (a[i] > max) max = a[i];
-        }
+        for(int z : b) if (z > max) max = z;
+        for(int z : a) if (z > max) max = z;
         return max;
     }
     public static int findMin(int[] a){
         int[] b = new int[a.length];
-        for (int i = 0; i < a.length; i++){
-            if (a[i] < 0) b[i] = -a[i];
-            else b[i] = a[i];
-        }
+        for (int i = 0; i < a.length; i++) b[i] = a[i] < 0 ? -a[i] : a[i];
         int min = b[0];
-        for (int i = 1; i < a.length; i++){
-            if (b[i] < min) min = b[i];
-        }
-        for (int i = 0; i < a.length; i++){
-            if (a[i] < min) min = a[i];
-        }
+        for(int z : b) if (z < min) min = z;
+        for(int z : a) if (z < min) min = z;
         return min;
     }
     public static boolean balance(int[] a){
         int sumRight = 0,
             sumLeft = 0;
-        for (int i = 0; i < a.length; i++){
-            sumRight += a[i];
-        }
-        for (int i = 0; i < a.length; i++){
-            sumRight -= a[i];
-            sumLeft += a[i];
-            //System.out.println(sumLeft + " " + sumRight); //To check how it went
+        for (int z : a) sumRight += z;
+        for (int z : a) {
+            sumRight -= z;
+            sumLeft += z;
+            System.out.println(sumLeft + " " + sumRight); //To check how it went
             if (sumLeft == sumRight) return true;
         }
         return false;
@@ -154,9 +137,7 @@ public class Main {
                 System.out.println("Path 1"); //To indicate which path went the calculation
                 for (int i = 0; i < n; i++){
                     inter = a[length - 1];
-                    for (int j = length - 1; j > 0; j--){
-                        a[j] = a[j - 1];
-                    }
+                    System.arraycopy(a,0,a,1,length - 1);
                     a[0] = inter;
                 }
             }else{
@@ -164,9 +145,7 @@ public class Main {
                 n -= length;
                 for (int i = n; i < 0; i++){
                     inter = a[0];
-                    for (int j = 0; j < length - 1; j++){
-                        a[j] = a[j + 1];
-                    }
+                    System.arraycopy(a,1,a,0,length - 1);
                     a[length - 1] = inter;
                 }
             }
@@ -179,9 +158,7 @@ public class Main {
                 System.out.println("Path 3"); //To indicate which path went the calculation
                 for (int i = 0; i < n; i--){
                     inter = a[0];
-                    for (int j = 0; j < length - 1; j++){
-                        a[j] = a[j + 1];
-                    }
+                    System.arraycopy(a,1,a,0,length - 1);
                     a[length - 1] = inter;
                 }
             }else{
@@ -189,15 +166,11 @@ public class Main {
                 n += length;
                 for (int i = n; i > 0; i--){
                     inter = a[length - 1];
-                    for (int j = length - 1; j > 0; j--){
-                        a[j] = a[j - 1];
-                    }
+                    System.arraycopy(a,0,a,1,length - 1);
                     a[0] = inter;
                 }
             }
         }
         return a;
-
-
     }
 }
