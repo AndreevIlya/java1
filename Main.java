@@ -17,7 +17,7 @@ public class Main {
         // Task 3
         System.out.println("Task 3");
         System.out.println(fourItemsProduct(nByte, nShort, nInt, nInt)); //Long does not suit here ;(
-
+//gjdjy
         //Task 4
         System.out.println("\nTask 4");
         System.out.println(betweenTenAndTwenty(6,12));
