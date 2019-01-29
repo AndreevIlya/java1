@@ -5,11 +5,10 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
-    private static Scanner scanner = new Scanner(System.in);
-    private static Random rand = new Random();
 
     public static void main(String[] args) {
         System.out.println("What game do u wanna play? #1 or #2?");
+        Scanner scanner = new Scanner(System.in);
         byte game = scanner.nextByte();
         if(game == 1) doTask1();
         else if(game == 2) doTask2();
@@ -23,15 +22,15 @@ public class Main {
         byte attemptsRemain;
         boolean exit = true;
         do{
-            guessed = rand.nextInt(10);
+            guessed = getRandomInt(10);
             attemptsRemain = 3;
             while(attemptsRemain != 0) {
                 System.out.println("Guess a number from 0 to 9:");
-                answer = scanner.nextInt();
+                answer = getIntFromConsole();
                 if (answer == guessed) {
                     System.out.printf("U won! Guessed was %d.\n", answer);
                     System.out.println("Do u want to play again? No = 0.");
-                    exit = scanner.nextInt() != 0;
+                    exit = getIntFromConsole() != 0;
                     break;
                 } else if (answer > guessed) {
                     attemptsRemain--;
@@ -51,18 +50,18 @@ public class Main {
             return true;
         }else {
             System.out.println("U've lost. Do u want to play again? No = 0.");
-            return scanner.nextInt() != 0;
+            return getIntFromConsole() != 0;
         }
     }
     private static void doTask2(){
         String[] words = {"apple", "orange", "lemon", "banana", "apricot", "avocado", "broccoli", "carrot", "cherry", "garlic", "grape", "melon", "leak", "kiwi", "mango", "mushroom", "nut", "olive", "pea", "peanut", "pear", "pepper", "pineapple", "pumpkin", "potato"};
         String guessed, answer;
         char[] firstLetters = new char[15];
-        guessed = words[rand.nextInt(words.length)];
+        guessed = words[getRandomInt(words.length)];
         System.out.println("Guess a word from a list:");
         System.out.println(Arrays.toString(words));
         while(true) {
-            answer = scanner.nextLine();
+            answer = getLineFromConsole();
             if (answer.equals(guessed)) {
                 System.out.printf("U won! Guessed was %s.\n", answer);
                 break;
@@ -83,5 +82,17 @@ public class Main {
             System.out.print(c);
         }
         System.out.println();
+    }
+    private static int getIntFromConsole(){
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextInt();
+    }
+    private static String getLineFromConsole(){
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextLine();
+    }
+    private static int getRandomInt(int length){
+        Random rand = new Random();
+        return rand.nextInt(length);
     }
 }
