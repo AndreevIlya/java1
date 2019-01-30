@@ -20,12 +20,10 @@ public class Main {
     private static void doTask1(){
         int guessed,
             answer;
-        byte attemptsRemain;
         boolean exit = true;
         do{
             guessed = rand.nextInt(10);
-            attemptsRemain = 3;
-            while(attemptsRemain != 0) {
+            for(byte attemptsRemain = 2;attemptsRemain > 0;attemptsRemain--) {
                 System.out.println("Guess a number from 0 to 9:");
                 answer = scanner.nextInt();
                 if (answer == guessed) {
@@ -34,11 +32,9 @@ public class Main {
                     exit = scanner.nextInt() != 0;
                     break;
                 } else if (answer > guessed) {
-                    attemptsRemain--;
                     System.out.println("Your answer is too big.");
                     exit = checkExit(attemptsRemain);
                 } else {
-                    attemptsRemain--;
                     System.out.println("Your answer is too small.");
                     exit = checkExit(attemptsRemain);
                 }
