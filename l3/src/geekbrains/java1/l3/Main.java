@@ -18,40 +18,46 @@ public class Main {
         scanner.close();
     }
     private static void doTask1(){
-        int guessed,
-            answer;
-        boolean exit = true;
+        int guessed, answer;
+        boolean stopTask = true;
         do{
             guessed = rand.nextInt(10);
-            for(byte attemptsRemain = 2;attemptsRemain > 0;attemptsRemain--) {
+            for(byte attemptsRemain = 2;attemptsRemain != -1;attemptsRemain--) {
                 System.out.println("Guess a number from 0 to 9:");
                 answer = scanner.nextInt();
                 if (answer == guessed) {
                     System.out.printf("U won! Guessed was %d.\n", answer);
                     System.out.println("Do u want to play again? No = 0.");
-                    exit = scanner.nextInt() != 0;
+                    stopTask = scanner.nextInt() == 0;
                     break;
                 } else if (answer > guessed) {
                     System.out.println("Your answer is too big.");
-                    exit = checkExit(attemptsRemain);
+                    stopTask = checkAttempts(attemptsRemain);
                 } else {
                     System.out.println("Your answer is too small.");
-                    exit = checkExit(attemptsRemain);
+                    stopTask = checkAttempts(attemptsRemain);
                 }
             }
-        }while(exit);
+        }while(!stopTask);
     }
-    private static boolean checkExit(byte attemptsRemain){
+    private static boolean checkAttempts(byte attemptsRemain){
         if (attemptsRemain != 0){
-            System.out.printf("Try again. There remained %d attempts.\n", attemptsRemain);
-            return true;
+            if(attemptsRemain == 1){
+                System.out.println("Try again. There remained 1 attempt.");
+            }else{
+                System.out.printf("Try again. There remained %d attempts.\n", attemptsRemain);
+            }
+            return false;
         }else {
             System.out.println("U've lost. Do u want to play again? No = 0.");
-            return scanner.nextInt() != 0;
+            return scanner.nextInt() == 0;
         }
     }
     private static void doTask2(){
-        String[] words = {"apple", "orange", "lemon", "banana", "apricot", "avocado", "broccoli", "carrot", "cherry", "garlic", "grape", "melon", "leak", "kiwi", "mango", "mushroom", "nut", "olive", "pea", "peanut", "pear", "pepper", "pineapple", "pumpkin", "potato"};
+        String[] words = {"apple", "orange", "lemon", "banana", "apricot", "avocado",
+                "broccoli", "carrot", "cherry", "garlic", "grape", "melon", "leak",
+                "kiwi", "mango", "mushroom", "nut", "olive", "pea", "peanut", "pear",
+                "pepper", "pineapple", "pumpkin", "potato"};
         String guessed, answer;
         char[] firstLetters = new char[15];
         guessed = words[rand.nextInt(words.length)];
