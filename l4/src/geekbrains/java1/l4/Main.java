@@ -4,8 +4,8 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
-    private static int SIZE = 5;
-    private static int DOTS_TO_WIN = 5;
+    private static int SIZE = 3;
+    private static int DOTS_TO_WIN = 3;
     private static char[][] map;
 
     private static final char DOT_EMPTY = '•';
@@ -82,13 +82,50 @@ public class Main {
     }
 
     private static void aiTurn() {
-        int x, y;
-        do {
-            x = rand.nextInt(SIZE);
-            y = rand.nextInt(SIZE);
-        } while (!isCellValid(x, y));
+        int x =0, y = 0, counter;
+        boolean turnDone = false;
+        int[][] turn = new int[DOTS_TO_WIN][3];
+        for(int i = 0; i < SIZE; i++) {// Check lines
+            for (int j = 0; j <= SIZE - DOTS_TO_WIN; j++){
+                counter = 0;
+                for (int k = j, s = 0; k < j + DOTS_TO_WIN && s < DOTS_TO_WIN; k++, s++) {
+                    turn[s][0] = i;
+                    turn[s][1] = k;
+                    if (map[i][k] == DOT_X) {
+                        counter++;
+                        turn[s][2] = 1;
+
+                    } else if (map[i][k] == DOT_O) {
+                        turn[s][2] = 2;
+                    } else {
+                        turn[s][2] = 0;
+                    }
+                }
+                if (counter >= DOTS_TO_WIN - 2){
+                    for (int m = 0; m < DOTS_TO_WIN; m++){
+                        if(turn[m][2] == 2){
+                            break;
+                        }else if (turn[m][2] == 0) {
+                            x = turn[m][1];
+                            y = turn[m][0];
+                            turnDone = true;
+                            break;
+                        }
+                    }
+                }
+                if(turnDone) break;
+            }
+            if(turnDone) break;
+        }
+        if(turnDone) map[y][x] = DOT_O;
+        else{
+            do {
+                x = rand.nextInt(SIZE);
+                y = rand.nextInt(SIZE);
+            } while (!isCellValid(x, y));
+            map[y][x] = DOT_O;
+        }
         System.out.println("Компьютер походил в точку " + (x + 1) + " " + (y + 1));
-        map[y][x] = DOT_O;
     }
     private static boolean checkWin(char letter) {
         for(int i = 0; i < SIZE; i++) {// Check lines
