@@ -7,7 +7,7 @@ public class Main {
     private static int SIZE = 6;
     private static int DOTS_TO_WIN = 4;
     private static int ALERT_LEVEL = 2;//AI starts to interrupt your lines
-    // when you are in ALERT_LEVEL cells to close it
+    // when you are in up to ALERT_LEVEL cells to close it
     private static char[][] map;
 
     private static final char DOT_EMPTY = '•';
@@ -85,8 +85,7 @@ public class Main {
 
     private static void aiTurn() {
         //I used random to make AI strategy unpredictable
-        int choice = rand.nextInt(1700); //100 is added to let some possibility of an AI mistake
-        System.out.println(choice);
+        int choice = rand.nextInt(1650); //50 is added to let some possibility of an AI mistake
         if(!(winLines() || winColumns() || winDiagL() || winDiagR() || winDiagLA() || winDiagLB() || winDiagRA() || winDiagRB())) {
             if (choice < 200) {
                 if (!checkLines() && !checkColumns() && !checkDiagL() && !checkDiagR() && !checkDiagLA() && !checkDiagLB() && !checkDiagRA() && !checkDiagRB()) aiRandom();
@@ -175,38 +174,41 @@ public class Main {
             y = rand.nextInt(SIZE);
         } while (!isCellValid(x, y));
         map[y][x] = DOT_O;
-        System.out.println("Компьютер походил в точку " + (x + 1) + " " + (y + 1));
+        System.out.println("RКомпьютер походил в точку " + (x + 1) + " " + (y + 1));
     }
     private static boolean checkLines(){
         int counter;
         boolean turnDone = false;
         int[][] turn = new int[DOTS_TO_WIN][3];
-        for(int i = 0; i < SIZE; i++) {
-            for (int j = 0; j <= SIZE - DOTS_TO_WIN; j++){
-                counter = 0;
-                for (int k = j, s = 0; k < j + DOTS_TO_WIN && s < DOTS_TO_WIN; k++, s++) {
-                    turn[s][0] = i;
-                    turn[s][1] = k;
-                    if (map[i][k] == DOT_X) {
-                        counter++;
-                        turn[s][2] = 1;
-                    } else if (map[i][k] == DOT_O) {
-                        turn[s][2] = 2;
-                    } else {
-                        turn[s][2] = 0;
-                    }
-                }
-                if (counter >= DOTS_TO_WIN - ALERT_LEVEL){
-                    for (int m = 0; m < DOTS_TO_WIN; m++){
-                        if(turn[m][2] == 2){
-                            break;
-                        }else if (turn[m][2] == 0) {
-                            map[turn[m][0]][turn[m][1]] = DOT_O;
-                            System.out.println("Компьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
-                            turnDone = true;
-                            break;
+        for (int p = 1; p <= ALERT_LEVEL; p++){
+            for(int i = 0; i < SIZE; i++) {
+                for (int j = 0; j <= SIZE - DOTS_TO_WIN; j++) {
+                    counter = 0;
+                    for (int k = j, s = 0; k < j + DOTS_TO_WIN && s < DOTS_TO_WIN; k++, s++) {
+                        turn[s][0] = i;
+                        turn[s][1] = k;
+                        if (map[i][k] == DOT_X) {
+                            counter++;
+                            turn[s][2] = 1;
+                        } else if (map[i][k] == DOT_O) {
+                            turn[s][2] = 2;
+                        } else {
+                            turn[s][2] = 0;
                         }
                     }
+                    if (counter >= DOTS_TO_WIN - p) {
+                        for (int m = 0; m < DOTS_TO_WIN; m++) {
+                            if (turn[m][2] == 2) {
+                                break;
+                            } else if (turn[m][2] == 0) {
+                                map[turn[m][0]][turn[m][1]] = DOT_O;
+                                System.out.println("LКомпьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
+                                turnDone = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (turnDone) break;
                 }
                 if(turnDone) break;
             }
@@ -218,33 +220,36 @@ public class Main {
         int counter;
         boolean turnDone = false;
         int[][] turn = new int[DOTS_TO_WIN][3];
-        for(int i = 0; i < SIZE; i++) {
-            for (int j = 0; j <= SIZE - DOTS_TO_WIN; j++){
-                counter = 0;
-                for (int k = j, s = 0; k < j + DOTS_TO_WIN && s < DOTS_TO_WIN; k++, s++) {
-                    turn[s][0] = i;
-                    turn[s][1] = k;
-                    if (map[k][i] == DOT_X) {
-                        counter++;
-                        turn[s][2] = 1;
+        for (int p = 1; p <= ALERT_LEVEL; p++) {
+            for(int i = 0; i < SIZE; i++) {
+                for (int j = 0; j <= SIZE - DOTS_TO_WIN; j++){
+                    counter = 0;
+                    for (int k = j, s = 0; k < j + DOTS_TO_WIN && s < DOTS_TO_WIN; k++, s++) {
+                        turn[s][0] = i;
+                        turn[s][1] = k;
+                        if (map[k][i] == DOT_X) {
+                            counter++;
+                            turn[s][2] = 1;
 
-                    } else if (map[k][i] == DOT_O) {
-                        turn[s][2] = 2;
-                    } else {
-                        turn[s][2] = 0;
-                    }
-                }
-                if (counter >= DOTS_TO_WIN - ALERT_LEVEL){
-                    for (int m = 0; m < DOTS_TO_WIN; m++){
-                        if(turn[m][2] == 2){
-                            break;
-                        }else if (turn[m][2] == 0) {
-                            map[turn[m][1]][turn[m][0]] = DOT_O;
-                            System.out.println("Компьютер походил в точку " + (turn[m][0] + 1) + " " + (turn[m][1] + 1));
-                            turnDone = true;
-                            break;
+                        } else if (map[k][i] == DOT_O) {
+                            turn[s][2] = 2;
+                        } else {
+                            turn[s][2] = 0;
                         }
                     }
+                    if (counter >= DOTS_TO_WIN - p) {
+                        for (int m = 0; m < DOTS_TO_WIN; m++) {
+                            if (turn[m][2] == 2) {
+                                break;
+                            } else if (turn[m][2] == 0) {
+                                map[turn[m][1]][turn[m][0]] = DOT_O;
+                                System.out.println("CКомпьютер походил в точку " + (turn[m][0] + 1) + " " + (turn[m][1] + 1));
+                                turnDone = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (turnDone) break;
                 }
                 if(turnDone) break;
             }
@@ -256,31 +261,34 @@ public class Main {
         int counter;
         boolean turnDone = false;
         int[][] turn = new int[DOTS_TO_WIN][3];
-        for (int j = 0; j <= SIZE - DOTS_TO_WIN; j++) {
-            counter = 0;
-            for (int k = j, s = 0; k < j + DOTS_TO_WIN && s < DOTS_TO_WIN; k++, s++) {
-                turn[s][0] = k;
-                if (map[k][k] == DOT_X) {
-                    counter++;
-                    turn[s][2] = 1;
+        for (int p = 1; p <= ALERT_LEVEL; p++) {
+            for (int j = 0; j <= SIZE - DOTS_TO_WIN; j++) {
+                counter = 0;
+                for (int k = j, s = 0; k < j + DOTS_TO_WIN && s < DOTS_TO_WIN; k++, s++) {
+                    turn[s][0] = k;
+                    if (map[k][k] == DOT_X) {
+                        counter++;
+                        turn[s][2] = 1;
 
-                } else if (map[k][k] == DOT_O) {
-                    turn[s][2] = 2;
-                } else {
-                    turn[s][2] = 0;
-                }
-            }
-            if (counter >= DOTS_TO_WIN - ALERT_LEVEL) {
-                for (int m = 0; m < DOTS_TO_WIN; m++) {
-                    if (turn[m][2] == 2) {
-                        break;
-                    } else if (turn[m][2] == 0) {
-                        map[turn[m][0]][turn[m][0]] = DOT_O;
-                        System.out.println("Компьютер походил в точку " + (turn[m][0] + 1) + " " + (turn[m][0] + 1));
-                        turnDone = true;
-                        break;
+                    } else if (map[k][k] == DOT_O) {
+                        turn[s][2] = 2;
+                    } else {
+                        turn[s][2] = 0;
                     }
                 }
+                if (counter >= DOTS_TO_WIN - p) {
+                    for (int m = 0; m < DOTS_TO_WIN; m++) {
+                        if (turn[m][2] == 2) {
+                            break;
+                        } else if (turn[m][2] == 0) {
+                            map[turn[m][0]][turn[m][0]] = DOT_O;
+                            System.out.println("DLКомпьютер походил в точку " + (turn[m][0] + 1) + " " + (turn[m][0] + 1));
+                            turnDone = true;
+                            break;
+                        }
+                    }
+                }
+                if (turnDone) break;
             }
             if(turnDone) break;
         }
@@ -290,32 +298,35 @@ public class Main {
         int counter;
         boolean turnDone = false;
         int[][] turn = new int[DOTS_TO_WIN][3];
-        for(int n = 1; n <= SIZE - DOTS_TO_WIN; n++) {
-            for (int j = 0; j <= SIZE - DOTS_TO_WIN - n; j++) {
-                counter = 0;
-                for (int k = j, s = 0; k < j + DOTS_TO_WIN - n && s < DOTS_TO_WIN; k++, s++) {
-                    turn[s][0] = k + n;
-                    turn[s][1] = k;
-                    if (map[k + n][k] == DOT_X) {
-                        counter++;
-                        turn[s][2] = 1;
-                    } else if (map[k + n][k] == DOT_O) {
-                        turn[s][2] = 2;
-                    } else {
-                        turn[s][2] = 0;
-                    }
-                }
-                if (counter >= DOTS_TO_WIN - ALERT_LEVEL) {
-                    for (int m = 0; m < DOTS_TO_WIN; m++) {
-                        if (turn[m][2] == 2) {
-                            break;
-                        } else if (turn[m][2] == 0) {
-                            map[turn[m][0]][turn[m][1]] = DOT_O;
-                            System.out.println("Компьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
-                            turnDone = true;
-                            break;
+        for (int p = 1; p <= ALERT_LEVEL; p++) {
+            for(int n = 1; n <= SIZE - DOTS_TO_WIN; n++) {
+                for (int j = 0; j <= SIZE - DOTS_TO_WIN - n; j++) {
+                    counter = 0;
+                    for (int k = j, s = 0; k < j + DOTS_TO_WIN - n && s < DOTS_TO_WIN; k++, s++) {
+                        turn[s][0] = k + n;
+                        turn[s][1] = k;
+                        if (map[k + n][k] == DOT_X) {
+                            counter++;
+                            turn[s][2] = 1;
+                        } else if (map[k + n][k] == DOT_O) {
+                            turn[s][2] = 2;
+                        } else {
+                            turn[s][2] = 0;
                         }
                     }
+                    if (counter >= DOTS_TO_WIN - p) {
+                        for (int m = 0; m < DOTS_TO_WIN; m++) {
+                            if (turn[m][2] == 2) {
+                                break;
+                            } else if (turn[m][2] == 0) {
+                                map[turn[m][0]][turn[m][1]] = DOT_O;
+                                System.out.println("LBКомпьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
+                                turnDone = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (turnDone) break;
                 }
                 if(turnDone) break;
             }
@@ -327,33 +338,36 @@ public class Main {
         int counter;
         boolean turnDone = false;
         int[][] turn = new int[DOTS_TO_WIN][3];
-        for(int n = 1; n <= SIZE - DOTS_TO_WIN; n++) {
-            for (int j = 0; j <= SIZE - DOTS_TO_WIN - n; j++) {
-                counter = 0;
-                for (int k = j, s = 0; k < j + DOTS_TO_WIN - n && s < DOTS_TO_WIN; k++, s++) {
-                    turn[s][0] = k;
-                    turn[s][1] = k + n;
-                    if (map[k][k + n] == DOT_X) {
-                        counter++;
-                        turn[s][2] = 1;
+        for (int p = 1; p <= ALERT_LEVEL; p++) {
+            for(int n = 1; n <= SIZE - DOTS_TO_WIN; n++) {
+                for (int j = 0; j <= SIZE - DOTS_TO_WIN - n; j++) {
+                    counter = 0;
+                    for (int k = j, s = 0; k < j + DOTS_TO_WIN - n && s < DOTS_TO_WIN; k++, s++) {
+                        turn[s][0] = k;
+                        turn[s][1] = k + n;
+                        if (map[k][k + n] == DOT_X) {
+                            counter++;
+                            turn[s][2] = 1;
 
-                    } else if (map[k][k + n] == DOT_O) {
-                        turn[s][2] = 2;
-                    } else {
-                        turn[s][2] = 0;
-                    }
-                }
-                if (counter >= DOTS_TO_WIN - ALERT_LEVEL) {
-                    for (int m = 0; m < DOTS_TO_WIN; m++) {
-                        if (turn[m][2] == 2) {
-                            break;
-                        } else if (turn[m][2] == 0) {
-                            map[turn[m][0]][turn[m][1]] = DOT_O;
-                            System.out.println("омпьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
-                            turnDone = true;
-                            break;
+                        } else if (map[k][k + n] == DOT_O) {
+                            turn[s][2] = 2;
+                        } else {
+                            turn[s][2] = 0;
                         }
                     }
+                    if (counter >= DOTS_TO_WIN - p) {
+                        for (int m = 0; m < DOTS_TO_WIN; m++) {
+                            if (turn[m][2] == 2) {
+                                break;
+                            } else if (turn[m][2] == 0) {
+                                map[turn[m][0]][turn[m][1]] = DOT_O;
+                                System.out.println("LAомпьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
+                                turnDone = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (turnDone) break;
                 }
                 if(turnDone) break;
             }
@@ -365,32 +379,35 @@ public class Main {
         int counter;
         boolean turnDone = false;
         int[][] turn = new int[DOTS_TO_WIN][3];
-        for (int j = 0; j <= SIZE - DOTS_TO_WIN; j++) {
-            counter = 0;
-            for (int k = j, s = 0; k < j + DOTS_TO_WIN && s < DOTS_TO_WIN; k++, s++) {
-                turn[s][0] = SIZE - k - 1;
-                turn[s][1] = k;
-                if (map[SIZE - k - 1][k] == DOT_X) {
-                    counter++;
-                    turn[s][2] = 1;
+        for (int p = 1; p <= ALERT_LEVEL; p++) {
+            for (int j = 0; j <= SIZE - DOTS_TO_WIN; j++) {
+                counter = 0;
+                for (int k = j, s = 0; k < j + DOTS_TO_WIN && s < DOTS_TO_WIN; k++, s++) {
+                    turn[s][0] = SIZE - k - 1;
+                    turn[s][1] = k;
+                    if (map[SIZE - k - 1][k] == DOT_X) {
+                        counter++;
+                        turn[s][2] = 1;
 
-                } else if (map[SIZE - k - 1][k] == DOT_O) {
-                    turn[s][2] = 2;
-                } else {
-                    turn[s][2] = 0;
-                }
-            }
-            if (counter >= DOTS_TO_WIN - ALERT_LEVEL) {
-                for (int m = DOTS_TO_WIN - 1; m >= 0; m--) {
-                    if (turn[m][2] == 2) {
-                        break;
-                    } else if (turn[m][2] == 0) {
-                        map[turn[m][0]][turn[m][1]] = DOT_O;
-                        System.out.println("Компьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
-                        turnDone = true;
-                        break;
+                    } else if (map[SIZE - k - 1][k] == DOT_O) {
+                        turn[s][2] = 2;
+                    } else {
+                        turn[s][2] = 0;
                     }
                 }
+                if (counter >= DOTS_TO_WIN - p) {
+                    for (int m = DOTS_TO_WIN - 1; m >= 0; m--) {
+                        if (turn[m][2] == 2) {
+                            break;
+                        } else if (turn[m][2] == 0) {
+                            map[turn[m][0]][turn[m][1]] = DOT_O;
+                            System.out.println("DRКомпьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
+                            turnDone = true;
+                            break;
+                        }
+                    }
+                }
+                if (turnDone) break;
             }
             if (turnDone) break;
         }
@@ -400,33 +417,36 @@ public class Main {
         int counter;
         boolean turnDone = false;
         int[][] turn = new int[DOTS_TO_WIN][3];
-        for(int n = 1; n <= SIZE - DOTS_TO_WIN; n++) {
-            for (int j = 0; j <= SIZE - DOTS_TO_WIN - n; j++) {
-                counter = 0;
-                for (int k = j, s = 0; k < j + DOTS_TO_WIN - n + 1 && s < DOTS_TO_WIN; k++, s++) {
-                    turn[s][0] = SIZE - k - 1;
-                    turn[s][1] = k + n;
-                    if (map[SIZE - k - 1][k + n] == DOT_X) {
-                        counter++;
-                        turn[s][2] = 1;
+        for (int p = 1; p <= ALERT_LEVEL; p++) {
+            for(int n = 1; n <= SIZE - DOTS_TO_WIN; n++) {
+                for (int j = 0; j <= SIZE - DOTS_TO_WIN - n; j++) {
+                    counter = 0;
+                    for (int k = j, s = 0; k < j + DOTS_TO_WIN - n + 1 && s < DOTS_TO_WIN; k++, s++) {
+                        turn[s][0] = SIZE - k - 1;
+                        turn[s][1] = k + n;
+                        if (map[SIZE - k - 1][k + n] == DOT_X) {
+                            counter++;
+                            turn[s][2] = 1;
 
-                    } else if (map[SIZE - k - 1][k + n] == DOT_O) {
-                        turn[s][2] = 2;
-                    } else {
-                        turn[s][2] = 0;
-                    }
-                }
-                if (counter >= DOTS_TO_WIN - ALERT_LEVEL) {
-                    for (int m = DOTS_TO_WIN - 1; m >= 0; m--) {
-                        if (turn[m][2] == 2) {
-                            break;
-                        } else if (turn[m][2] == 0) {
-                            map[turn[m][0]][turn[m][1]] = DOT_O;
-                            System.out.println("Компьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
-                            turnDone = true;
-                            break;
+                        } else if (map[SIZE - k - 1][k + n] == DOT_O) {
+                            turn[s][2] = 2;
+                        } else {
+                            turn[s][2] = 0;
                         }
                     }
+                    if (counter >= DOTS_TO_WIN - p) {
+                        for (int m = DOTS_TO_WIN - 1; m >= 0; m--) {
+                            if (turn[m][2] == 2) {
+                                break;
+                            } else if (turn[m][2] == 0) {
+                                map[turn[m][0]][turn[m][1]] = DOT_O;
+                                System.out.println("RBКомпьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
+                                turnDone = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (turnDone) break;
                 }
                 if (turnDone) break;
             }
@@ -438,33 +458,36 @@ public class Main {
         int counter;
         boolean turnDone = false;
         int[][] turn = new int[DOTS_TO_WIN][3];
-        for(int n = 1; n <= SIZE - DOTS_TO_WIN; n++) {
-            for (int j = 0; j <= SIZE - DOTS_TO_WIN - n; j++) {
-                counter = 0;
-                for (int k = j, s = 0; k < j + DOTS_TO_WIN - n + 1 && s < DOTS_TO_WIN; k++, s++) {
-                    turn[s][0] = SIZE - k - 1 - n;
-                    turn[s][1] = k;
-                    if (map[SIZE - k - 1 - n][k] == DOT_X) {
-                        counter++;
-                        turn[s][2] = 1;
+        for (int p = 1; p <= ALERT_LEVEL; p++) {
+            for(int n = 1; n <= SIZE - DOTS_TO_WIN; n++) {
+                for (int j = 0; j <= SIZE - DOTS_TO_WIN - n; j++) {
+                    counter = 0;
+                    for (int k = j, s = 0; k < j + DOTS_TO_WIN - n + 1 && s < DOTS_TO_WIN; k++, s++) {
+                        turn[s][0] = SIZE - k - 1 - n;
+                        turn[s][1] = k;
+                        if (map[SIZE - k - 1 - n][k] == DOT_X) {
+                            counter++;
+                            turn[s][2] = 1;
 
-                    } else if (map[SIZE - k - 1 - n][k] == DOT_O) {
-                        turn[s][2] = 2;
-                    } else {
-                        turn[s][2] = 0;
-                    }
-                }
-                if (counter >= DOTS_TO_WIN - ALERT_LEVEL) {
-                    for (int m = DOTS_TO_WIN - 1; m >= 0; m--) {
-                        if (turn[m][2] == 2) {
-                            break;
-                        } else if (turn[m][2] == 0) {
-                            map[turn[m][0]][turn[m][1]] = DOT_O;
-                            System.out.println("Компьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
-                            turnDone = true;
-                            break;
+                        } else if (map[SIZE - k - 1 - n][k] == DOT_O) {
+                            turn[s][2] = 2;
+                        } else {
+                            turn[s][2] = 0;
                         }
                     }
+                    if (counter >= DOTS_TO_WIN - p) {
+                        for (int m = DOTS_TO_WIN - 1; m >= 0; m--) {
+                            if (turn[m][2] == 2) {
+                                break;
+                            } else if (turn[m][2] == 0) {
+                                map[turn[m][0]][turn[m][1]] = DOT_O;
+                                System.out.println("RAКомпьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
+                                turnDone = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (turnDone) break;
                 }
                 if (turnDone) break;
             }
@@ -472,7 +495,7 @@ public class Main {
         }
         return turnDone;
     }
-    //Here starts the methods by which AI can win immediately
+    //Here start the methods by which AI can win immediately
     private static boolean winLines(){
         int counterO;
         boolean turnDone = false;
@@ -496,7 +519,7 @@ public class Main {
                     for (int m = 0; m < DOTS_TO_WIN; m++){
                         if (turn[m][2] == 0) {
                             map[turn[m][0]][turn[m][1]] = DOT_O;
-                            System.out.println("Компьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
+                            System.out.println("WLКомпьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
                             turnDone = true;
                             break;
                         }
@@ -532,7 +555,7 @@ public class Main {
                     for (int m = 0; m < DOTS_TO_WIN; m++){
                         if (turn[m][2] == 0) {
                             map[turn[m][1]][turn[m][0]] = DOT_O;
-                            System.out.println("Компьютер походил в точку " + (turn[m][0] + 1) + " " + (turn[m][1] + 1));
+                            System.out.println("WCКомпьютер походил в точку " + (turn[m][0] + 1) + " " + (turn[m][1] + 1));
                             turnDone = true;
                             break;
                         }
@@ -566,7 +589,7 @@ public class Main {
                 for (int m = 0; m < DOTS_TO_WIN; m++) {
                     if (turn[m][2] == 0) {
                         map[turn[m][0]][turn[m][0]] = DOT_O;
-                        System.out.println("Компьютер походил в точку " + (turn[m][0] + 1) + " " + (turn[m][0] + 1));
+                        System.out.println("WDLКомпьютер походил в точку " + (turn[m][0] + 1) + " " + (turn[m][0] + 1));
                         turnDone = true;
                         break;
                     }
@@ -598,7 +621,7 @@ public class Main {
                     for (int m = 0; m < DOTS_TO_WIN; m++) {
                         if (turn[m][2] == 0) {
                             map[turn[m][0]][turn[m][1]] = DOT_O;
-                            System.out.println("Компьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
+                            System.out.println("WLBКомпьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
                             turnDone = true;
                             break;
                         }
@@ -634,7 +657,7 @@ public class Main {
                     for (int m = 0; m < DOTS_TO_WIN; m++) {
                         if (turn[m][2] == 0) {
                             map[turn[m][0]][turn[m][1]] = DOT_O;
-                            System.out.println("Компьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
+                            System.out.println("WLAКомпьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
                             turnDone = true;
                             break;
                         }
@@ -669,7 +692,7 @@ public class Main {
                 for (int m = DOTS_TO_WIN - 1; m >= 0; m--) {
                     if (turn[m][2] == 0) {
                         map[turn[m][0]][turn[m][1]] = DOT_O;
-                        System.out.println("Компьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
+                        System.out.println("WDRКомпьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
                         turnDone = true;
                         break;
                     }
@@ -703,7 +726,7 @@ public class Main {
                     for (int m = DOTS_TO_WIN - 1; m >= 0; m--) {
                         if (turn[m][2] == 0) {
                             map[turn[m][0]][turn[m][1]] = DOT_O;
-                            System.out.println("Компьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
+                            System.out.println("WRBКомпьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
                             turnDone = true;
                             break;
                         }
@@ -739,7 +762,7 @@ public class Main {
                     for (int m = DOTS_TO_WIN - 1; m >= 0; m--) {
                         if (turn[m][2] == 0) {
                             map[turn[m][0]][turn[m][1]] = DOT_O;
-                            System.out.println("Компьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
+                            System.out.println("WRAКомпьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
                             turnDone = true;
                             break;
                         }
