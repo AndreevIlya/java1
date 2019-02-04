@@ -9,6 +9,7 @@ public class Main {
     private static int ALERT_LEVEL = 2;//AI starts to interrupt your lines
     // when you are in up to ALERT_LEVEL cells to close it
     private static char[][] map;
+    private static int[][] turn = new int[DOTS_TO_WIN][3];
 
     private static final char DOT_EMPTY = '•';
     private static final char DOT_X = 'X';
@@ -179,7 +180,6 @@ public class Main {
     private static boolean checkLines(){
         int counter;
         boolean turnDone = false;
-        int[][] turn = new int[DOTS_TO_WIN][3];
         for (int p = 1; p <= ALERT_LEVEL; p++){
             for(int i = 0; i < SIZE; i++) {
                 for (int j = 0; j <= SIZE - DOTS_TO_WIN; j++) {
@@ -196,18 +196,7 @@ public class Main {
                             turn[s][2] = 0;
                         }
                     }
-                    if (counter >= DOTS_TO_WIN - p) {
-                        for (int m = 0; m < DOTS_TO_WIN; m++) {
-                            if (turn[m][2] == 2) {
-                                break;
-                            } else if (turn[m][2] == 0) {
-                                map[turn[m][0]][turn[m][1]] = DOT_O;
-                                System.out.println("LКомпьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
-                                turnDone = true;
-                                break;
-                            }
-                        }
-                    }
+                    turnDone = assign(counter,p, true);
                     if (turnDone) break;
                 }
                 if(turnDone) break;
@@ -219,36 +208,23 @@ public class Main {
     private static boolean checkColumns(){
         int counter;
         boolean turnDone = false;
-        int[][] turn = new int[DOTS_TO_WIN][3];
         for (int p = 1; p <= ALERT_LEVEL; p++) {
             for(int i = 0; i < SIZE; i++) {
                 for (int j = 0; j <= SIZE - DOTS_TO_WIN; j++){
                     counter = 0;
                     for (int k = j, s = 0; k < j + DOTS_TO_WIN && s < DOTS_TO_WIN; k++, s++) {
-                        turn[s][0] = i;
-                        turn[s][1] = k;
+                        turn[s][0] = k;
+                        turn[s][1] = i;
                         if (map[k][i] == DOT_X) {
                             counter++;
                             turn[s][2] = 1;
-
                         } else if (map[k][i] == DOT_O) {
                             turn[s][2] = 2;
                         } else {
                             turn[s][2] = 0;
                         }
                     }
-                    if (counter >= DOTS_TO_WIN - p) {
-                        for (int m = 0; m < DOTS_TO_WIN; m++) {
-                            if (turn[m][2] == 2) {
-                                break;
-                            } else if (turn[m][2] == 0) {
-                                map[turn[m][1]][turn[m][0]] = DOT_O;
-                                System.out.println("CКомпьютер походил в точку " + (turn[m][0] + 1) + " " + (turn[m][1] + 1));
-                                turnDone = true;
-                                break;
-                            }
-                        }
-                    }
+                    turnDone = assign(counter,p, true);
                     if (turnDone) break;
                 }
                 if(turnDone) break;
@@ -260,34 +236,22 @@ public class Main {
     private static boolean checkDiagL(){
         int counter;
         boolean turnDone = false;
-        int[][] turn = new int[DOTS_TO_WIN][3];
         for (int p = 1; p <= ALERT_LEVEL; p++) {
             for (int j = 0; j <= SIZE - DOTS_TO_WIN; j++) {
                 counter = 0;
                 for (int k = j, s = 0; k < j + DOTS_TO_WIN && s < DOTS_TO_WIN; k++, s++) {
                     turn[s][0] = k;
+                    turn[s][1] = k;
                     if (map[k][k] == DOT_X) {
                         counter++;
                         turn[s][2] = 1;
-
                     } else if (map[k][k] == DOT_O) {
                         turn[s][2] = 2;
                     } else {
                         turn[s][2] = 0;
                     }
                 }
-                if (counter >= DOTS_TO_WIN - p) {
-                    for (int m = 0; m < DOTS_TO_WIN; m++) {
-                        if (turn[m][2] == 2) {
-                            break;
-                        } else if (turn[m][2] == 0) {
-                            map[turn[m][0]][turn[m][0]] = DOT_O;
-                            System.out.println("DLКомпьютер походил в точку " + (turn[m][0] + 1) + " " + (turn[m][0] + 1));
-                            turnDone = true;
-                            break;
-                        }
-                    }
-                }
+                turnDone = assign(counter,p, true);
                 if (turnDone) break;
             }
             if(turnDone) break;
@@ -297,7 +261,6 @@ public class Main {
     private static boolean checkDiagLB(){
         int counter;
         boolean turnDone = false;
-        int[][] turn = new int[DOTS_TO_WIN][3];
         for (int p = 1; p <= ALERT_LEVEL; p++) {
             for(int n = 1; n <= SIZE - DOTS_TO_WIN; n++) {
                 for (int j = 0; j <= SIZE - DOTS_TO_WIN - n; j++) {
@@ -314,18 +277,7 @@ public class Main {
                             turn[s][2] = 0;
                         }
                     }
-                    if (counter >= DOTS_TO_WIN - p) {
-                        for (int m = 0; m < DOTS_TO_WIN; m++) {
-                            if (turn[m][2] == 2) {
-                                break;
-                            } else if (turn[m][2] == 0) {
-                                map[turn[m][0]][turn[m][1]] = DOT_O;
-                                System.out.println("LBКомпьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
-                                turnDone = true;
-                                break;
-                            }
-                        }
-                    }
+                    turnDone = assign(counter,p, true);
                     if (turnDone) break;
                 }
                 if(turnDone) break;
@@ -337,7 +289,6 @@ public class Main {
     private static boolean checkDiagLA(){
         int counter;
         boolean turnDone = false;
-        int[][] turn = new int[DOTS_TO_WIN][3];
         for (int p = 1; p <= ALERT_LEVEL; p++) {
             for(int n = 1; n <= SIZE - DOTS_TO_WIN; n++) {
                 for (int j = 0; j <= SIZE - DOTS_TO_WIN - n; j++) {
@@ -348,25 +299,13 @@ public class Main {
                         if (map[k][k + n] == DOT_X) {
                             counter++;
                             turn[s][2] = 1;
-
                         } else if (map[k][k + n] == DOT_O) {
                             turn[s][2] = 2;
                         } else {
                             turn[s][2] = 0;
                         }
                     }
-                    if (counter >= DOTS_TO_WIN - p) {
-                        for (int m = 0; m < DOTS_TO_WIN; m++) {
-                            if (turn[m][2] == 2) {
-                                break;
-                            } else if (turn[m][2] == 0) {
-                                map[turn[m][0]][turn[m][1]] = DOT_O;
-                                System.out.println("LAомпьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
-                                turnDone = true;
-                                break;
-                            }
-                        }
-                    }
+                    turnDone = assign(counter,p, true);
                     if (turnDone) break;
                 }
                 if(turnDone) break;
@@ -378,7 +317,6 @@ public class Main {
     private static boolean checkDiagR(){
         int counter;
         boolean turnDone = false;
-        int[][] turn = new int[DOTS_TO_WIN][3];
         for (int p = 1; p <= ALERT_LEVEL; p++) {
             for (int j = 0; j <= SIZE - DOTS_TO_WIN; j++) {
                 counter = 0;
@@ -388,25 +326,13 @@ public class Main {
                     if (map[SIZE - k - 1][k] == DOT_X) {
                         counter++;
                         turn[s][2] = 1;
-
                     } else if (map[SIZE - k - 1][k] == DOT_O) {
                         turn[s][2] = 2;
                     } else {
                         turn[s][2] = 0;
                     }
                 }
-                if (counter >= DOTS_TO_WIN - p) {
-                    for (int m = DOTS_TO_WIN - 1; m >= 0; m--) {
-                        if (turn[m][2] == 2) {
-                            break;
-                        } else if (turn[m][2] == 0) {
-                            map[turn[m][0]][turn[m][1]] = DOT_O;
-                            System.out.println("DRКомпьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
-                            turnDone = true;
-                            break;
-                        }
-                    }
-                }
+                turnDone = assign(counter,p, true);
                 if (turnDone) break;
             }
             if (turnDone) break;
@@ -416,7 +342,6 @@ public class Main {
     private static boolean checkDiagRB(){
         int counter;
         boolean turnDone = false;
-        int[][] turn = new int[DOTS_TO_WIN][3];
         for (int p = 1; p <= ALERT_LEVEL; p++) {
             for(int n = 1; n <= SIZE - DOTS_TO_WIN; n++) {
                 for (int j = 0; j <= SIZE - DOTS_TO_WIN - n; j++) {
@@ -427,25 +352,13 @@ public class Main {
                         if (map[SIZE - k - 1][k + n] == DOT_X) {
                             counter++;
                             turn[s][2] = 1;
-
                         } else if (map[SIZE - k - 1][k + n] == DOT_O) {
                             turn[s][2] = 2;
                         } else {
                             turn[s][2] = 0;
                         }
                     }
-                    if (counter >= DOTS_TO_WIN - p) {
-                        for (int m = DOTS_TO_WIN - 1; m >= 0; m--) {
-                            if (turn[m][2] == 2) {
-                                break;
-                            } else if (turn[m][2] == 0) {
-                                map[turn[m][0]][turn[m][1]] = DOT_O;
-                                System.out.println("RBКомпьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
-                                turnDone = true;
-                                break;
-                            }
-                        }
-                    }
+                    turnDone = assign(counter,p, true);
                     if (turnDone) break;
                 }
                 if (turnDone) break;
@@ -457,7 +370,6 @@ public class Main {
     private static boolean checkDiagRA(){
         int counter;
         boolean turnDone = false;
-        int[][] turn = new int[DOTS_TO_WIN][3];
         for (int p = 1; p <= ALERT_LEVEL; p++) {
             for(int n = 1; n <= SIZE - DOTS_TO_WIN; n++) {
                 for (int j = 0; j <= SIZE - DOTS_TO_WIN - n; j++) {
@@ -468,25 +380,13 @@ public class Main {
                         if (map[SIZE - k - 1 - n][k] == DOT_X) {
                             counter++;
                             turn[s][2] = 1;
-
                         } else if (map[SIZE - k - 1 - n][k] == DOT_O) {
                             turn[s][2] = 2;
                         } else {
                             turn[s][2] = 0;
                         }
                     }
-                    if (counter >= DOTS_TO_WIN - p) {
-                        for (int m = DOTS_TO_WIN - 1; m >= 0; m--) {
-                            if (turn[m][2] == 2) {
-                                break;
-                            } else if (turn[m][2] == 0) {
-                                map[turn[m][0]][turn[m][1]] = DOT_O;
-                                System.out.println("RAКомпьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
-                                turnDone = true;
-                                break;
-                            }
-                        }
-                    }
+                    turnDone = assign(counter,p, true);
                     if (turnDone) break;
                 }
                 if (turnDone) break;
@@ -497,12 +397,11 @@ public class Main {
     }
     //Here start the methods by which AI can win immediately
     private static boolean winLines(){
-        int counterO;
+        int counter;
         boolean turnDone = false;
-        int[][] turn = new int[DOTS_TO_WIN][3];
         for(int i = 0; i < SIZE; i++) {
             for (int j = 0; j <= SIZE - DOTS_TO_WIN; j++){
-                counterO = 0;
+                counter = 0;
                 for (int k = j, s = 0; k < j + DOTS_TO_WIN && s < DOTS_TO_WIN; k++, s++) {
                     turn[s][0] = i;
                     turn[s][1] = k;
@@ -510,21 +409,12 @@ public class Main {
                         turn[s][2] = 1;
                     } else if (map[i][k] == DOT_O) {
                         turn[s][2] = 2;
-                        counterO++;
+                        counter++;
                     } else {
                         turn[s][2] = 0;
                     }
                 }
-                if (counterO == DOTS_TO_WIN - 1){
-                    for (int m = 0; m < DOTS_TO_WIN; m++){
-                        if (turn[m][2] == 0) {
-                            map[turn[m][0]][turn[m][1]] = DOT_O;
-                            System.out.println("WLКомпьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
-                            turnDone = true;
-                            break;
-                        }
-                    }
-                }
+                turnDone = assign(counter,1, false);
                 if(turnDone) break;
             }
             if(turnDone) break;
@@ -532,35 +422,24 @@ public class Main {
         return turnDone;
     }
     private static boolean winColumns(){
-        int counterO;
+        int counter;
         boolean turnDone = false;
-        int[][] turn = new int[DOTS_TO_WIN][3];
         for(int i = 0; i < SIZE; i++) {
             for (int j = 0; j <= SIZE - DOTS_TO_WIN; j++){
-                counterO = 0;
+                counter = 0;
                 for (int k = j, s = 0; k < j + DOTS_TO_WIN && s < DOTS_TO_WIN; k++, s++) {
-                    turn[s][0] = i;
-                    turn[s][1] = k;
+                    turn[s][0] = k;
+                    turn[s][1] = i;
                     if (map[k][i] == DOT_X) {
                         turn[s][2] = 1;
-
                     } else if (map[k][i] == DOT_O) {
                         turn[s][2] = 2;
-                        counterO++;
+                        counter++;
                     } else {
                         turn[s][2] = 0;
                     }
                 }
-                if (counterO == DOTS_TO_WIN - 1){
-                    for (int m = 0; m < DOTS_TO_WIN; m++){
-                        if (turn[m][2] == 0) {
-                            map[turn[m][1]][turn[m][0]] = DOT_O;
-                            System.out.println("WCКомпьютер походил в точку " + (turn[m][0] + 1) + " " + (turn[m][1] + 1));
-                            turnDone = true;
-                            break;
-                        }
-                    }
-                }
+                turnDone = assign(counter,1, false);
                 if(turnDone) break;
             }
             if(turnDone) break;
@@ -568,43 +447,32 @@ public class Main {
         return turnDone;
     }
     private static boolean winDiagL(){
-        int counterO;
+        int counter;
         boolean turnDone = false;
-        int[][] turn = new int[DOTS_TO_WIN][3];
         for (int j = 0; j <= SIZE - DOTS_TO_WIN; j++) {
-            counterO = 0;
+            counter = 0;
             for (int k = j, s = 0; k < j + DOTS_TO_WIN && s < DOTS_TO_WIN; k++, s++) {
                 turn[s][0] = k;
+                turn[s][1] = k;
                 if (map[k][k] == DOT_X) {
                     turn[s][2] = 1;
-
                 } else if (map[k][k] == DOT_O) {
                     turn[s][2] = 2;
-                    counterO++;
+                    counter++;
                 } else {
                     turn[s][2] = 0;
                 }
             }
-            if (counterO == DOTS_TO_WIN - 1) {
-                for (int m = 0; m < DOTS_TO_WIN; m++) {
-                    if (turn[m][2] == 0) {
-                        map[turn[m][0]][turn[m][0]] = DOT_O;
-                        System.out.println("WDLКомпьютер походил в точку " + (turn[m][0] + 1) + " " + (turn[m][0] + 1));
-                        turnDone = true;
-                        break;
-                    }
-                }
-            }
+            turnDone = assign(counter,1, false);
         }
         return turnDone;
     }
     private static boolean winDiagLB(){
-        int counterO;
+        int counter;
         boolean turnDone = false;
-        int[][] turn = new int[DOTS_TO_WIN][3];
         for(int n = 1; n <= SIZE - DOTS_TO_WIN; n++) {
             for (int j = 0; j <= SIZE - DOTS_TO_WIN - n; j++) {
-                counterO = 0;
+                counter = 0;
                 for (int k = j, s = 0; k < j + DOTS_TO_WIN - n && s < DOTS_TO_WIN; k++, s++) {
                     turn[s][0] = k + n;
                     turn[s][1] = k;
@@ -612,21 +480,12 @@ public class Main {
                         turn[s][2] = 1;
                     } else if (map[k + n][k] == DOT_O) {
                         turn[s][2] = 2;
-                        counterO++;
+                        counter++;
                     } else {
                         turn[s][2] = 0;
                     }
                 }
-                if (counterO == DOTS_TO_WIN - 1) {
-                    for (int m = 0; m < DOTS_TO_WIN; m++) {
-                        if (turn[m][2] == 0) {
-                            map[turn[m][0]][turn[m][1]] = DOT_O;
-                            System.out.println("WLBКомпьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
-                            turnDone = true;
-                            break;
-                        }
-                    }
-                }
+                turnDone = assign(counter,1, false);
                 if(turnDone) break;
             }
             if(turnDone) break;
@@ -634,35 +493,24 @@ public class Main {
         return turnDone;
     }
     private static boolean winDiagLA(){
-        int counterO;
+        int counter;
         boolean turnDone = false;
-        int[][] turn = new int[DOTS_TO_WIN][3];
         for(int n = 1; n <= SIZE - DOTS_TO_WIN; n++) {
             for (int j = 0; j <= SIZE - DOTS_TO_WIN - n; j++) {
-                counterO = 0;
+                counter = 0;
                 for (int k = j, s = 0; k < j + DOTS_TO_WIN - n && s < DOTS_TO_WIN; k++, s++) {
                     turn[s][0] = k;
                     turn[s][1] = k + n;
                     if (map[k][k + n] == DOT_X) {
                         turn[s][2] = 1;
-
                     } else if (map[k][k + n] == DOT_O) {
                         turn[s][2] = 2;
-                        counterO++;
+                        counter++;
                     } else {
                         turn[s][2] = 0;
                     }
                 }
-                if (counterO == DOTS_TO_WIN - 1) {
-                    for (int m = 0; m < DOTS_TO_WIN; m++) {
-                        if (turn[m][2] == 0) {
-                            map[turn[m][0]][turn[m][1]] = DOT_O;
-                            System.out.println("WLAКомпьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
-                            turnDone = true;
-                            break;
-                        }
-                    }
-                }
+                turnDone = assign(counter,1, false);
                 if(turnDone) break;
             }
             if(turnDone) break;
@@ -670,11 +518,10 @@ public class Main {
         return turnDone;
     }
     private static boolean winDiagR(){
-        int counterO;
+        int counter;
         boolean turnDone = false;
-        int[][] turn = new int[DOTS_TO_WIN][3];
         for (int j = 0; j <= SIZE - DOTS_TO_WIN; j++) {
-            counterO = 0;
+            counter = 0;
             for (int k = j, s = 0; k < j + DOTS_TO_WIN && s < DOTS_TO_WIN; k++, s++) {
                 turn[s][0] = SIZE - k - 1;
                 turn[s][1] = k;
@@ -683,55 +530,35 @@ public class Main {
 
                 } else if (map[SIZE - k - 1][k] == DOT_O) {
                     turn[s][2] = 2;
-                    counterO++;
+                    counter++;
                 } else {
                     turn[s][2] = 0;
                 }
             }
-            if (counterO == DOTS_TO_WIN - 1) {
-                for (int m = DOTS_TO_WIN - 1; m >= 0; m--) {
-                    if (turn[m][2] == 0) {
-                        map[turn[m][0]][turn[m][1]] = DOT_O;
-                        System.out.println("WDRКомпьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
-                        turnDone = true;
-                        break;
-                    }
-                }
-            }
+            turnDone = assign(counter,1, false);
             if (turnDone) break;
         }
         return turnDone;
     }
     private static boolean winDiagRB(){
-        int counterO;
+        int counter;
         boolean turnDone = false;
-        int[][] turn = new int[DOTS_TO_WIN][3];
         for(int n = 1; n <= SIZE - DOTS_TO_WIN; n++) {
             for (int j = 0; j <= SIZE - DOTS_TO_WIN - n; j++) {
-                counterO = 0;
+                counter = 0;
                 for (int k = j, s = 0; k < j + DOTS_TO_WIN - n + 1 && s < DOTS_TO_WIN; k++, s++) {
                     turn[s][0] = SIZE - k - 1;
                     turn[s][1] = k + n;
                     if (map[SIZE - k - 1][k + n] == DOT_X) {
                         turn[s][2] = 1;
-
                     } else if (map[SIZE - k - 1][k + n] == DOT_O) {
                         turn[s][2] = 2;
-                        counterO++;
+                        counter++;
                     } else {
                         turn[s][2] = 0;
                     }
                 }
-                if (counterO == DOTS_TO_WIN - 1) {
-                    for (int m = DOTS_TO_WIN - 1; m >= 0; m--) {
-                        if (turn[m][2] == 0) {
-                            map[turn[m][0]][turn[m][1]] = DOT_O;
-                            System.out.println("WRBКомпьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
-                            turnDone = true;
-                            break;
-                        }
-                    }
-                }
+                turnDone = assign(counter,1, false);
                 if (turnDone) break;
             }
             if (turnDone) break;
@@ -739,12 +566,11 @@ public class Main {
         return turnDone;
     }
     private static boolean winDiagRA(){
-        int counterO;
+        int counter;
         boolean turnDone = false;
-        int[][] turn = new int[DOTS_TO_WIN][3];
         for(int n = 1; n <= SIZE - DOTS_TO_WIN; n++) {
             for (int j = 0; j <= SIZE - DOTS_TO_WIN - n; j++) {
-                counterO = 0;
+                counter = 0;
                 for (int k = j, s = 0; k < j + DOTS_TO_WIN - n + 1 && s < DOTS_TO_WIN; k++, s++) {
                     turn[s][0] = SIZE - k - 1 - n;
                     turn[s][1] = k;
@@ -753,25 +579,30 @@ public class Main {
 
                     } else if (map[SIZE - k - 1 - n][k] == DOT_O) {
                         turn[s][2] = 2;
-                        counterO++;
+                        counter++;
                     } else {
                         turn[s][2] = 0;
                     }
                 }
-                if (counterO == DOTS_TO_WIN - 1) {
-                    for (int m = DOTS_TO_WIN - 1; m >= 0; m--) {
-                        if (turn[m][2] == 0) {
-                            map[turn[m][0]][turn[m][1]] = DOT_O;
-                            System.out.println("WRAКомпьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
-                            turnDone = true;
-                            break;
-                        }
-                    }
-                }
+                turnDone = assign(counter,1, false);
                 if (turnDone) break;
             }
             if (turnDone) break;
         }
         return turnDone;
+    }
+    private static boolean assign(int counter, int p, boolean checkO){
+        if (counter >= DOTS_TO_WIN - p) {
+            for (int m = 0; m < DOTS_TO_WIN; m++) {
+                if (turn[m][2] == 2 && checkO) {
+                    return false;
+                } else if (turn[m][2] == 0) {
+                    map[turn[m][0]][turn[m][1]] = DOT_O;
+                    System.out.println("Компьютер походил в точку " + (turn[m][1] + 1) + " " + (turn[m][0] + 1));
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
