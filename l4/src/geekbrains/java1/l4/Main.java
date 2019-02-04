@@ -7,7 +7,7 @@ public class Main {
     private static int SIZE = 6;
     private static int DOTS_TO_WIN = 4;
     private static int ALERT_LEVEL = 2;//AI starts to interrupt your lines
-    // when you are in up to ALERT_LEVEL cells to close it
+    // when you are in upto ALERT_LEVEL cells to close it
     private static char[][] map;
     private static int[][] turn = new int[DOTS_TO_WIN][3];
 
@@ -48,7 +48,6 @@ public class Main {
             }
         }
     }
-
     private static void printMap(){
         for (int i = 0; i <= SIZE; i++) {
             System.out.print(i + " ");
@@ -62,7 +61,6 @@ public class Main {
             System.out.println();
         }
     }
-
     private static void humanTurn() {
         int x, y;
         do {
@@ -78,16 +76,15 @@ public class Main {
         } while (!isCellValid(x, y));
         map[y][x] = DOT_X;
     }
-
     private static boolean isCellValid(int x, int y) {
         if (x < 0 || x >= SIZE || y < 0 || y >= SIZE) return false;
         return (map[y][x] == DOT_EMPTY);
     }
-
     private static void aiTurn() {
         //I used random to make AI strategy unpredictable
-        int choice = rand.nextInt(1650); //50 is added to let some possibility of an AI mistake
+        int choice = rand.nextInt(1600); //50 is added to let some possibility of an AI mistake
         if(!(winLines() || winColumns() || winDiagL() || winDiagR() || winDiagLA() || winDiagLB() || winDiagRA() || winDiagRB())) {
+            System.out.println(choice);
             if (choice < 200) {
                 if (!checkLines() && !checkColumns() && !checkDiagL() && !checkDiagR() && !checkDiagLA() && !checkDiagLB() && !checkDiagRA() && !checkDiagRB()) aiRandom();
             } else if (choice < 400) {
@@ -185,16 +182,7 @@ public class Main {
                 for (int j = 0; j <= SIZE - DOTS_TO_WIN; j++) {
                     counter = 0;
                     for (int k = j, s = 0; k < j + DOTS_TO_WIN && s < DOTS_TO_WIN; k++, s++) {
-                        turn[s][0] = i;
-                        turn[s][1] = k;
-                        if (map[i][k] == DOT_X) {
-                            counter++;
-                            turn[s][2] = 1;
-                        } else if (map[i][k] == DOT_O) {
-                            turn[s][2] = 2;
-                        } else {
-                            turn[s][2] = 0;
-                        }
+                        counter = constuctTurn(s, i, k, counter, true);
                     }
                     turnDone = assign(counter,p, true);
                     if (turnDone) break;
@@ -213,16 +201,7 @@ public class Main {
                 for (int j = 0; j <= SIZE - DOTS_TO_WIN; j++){
                     counter = 0;
                     for (int k = j, s = 0; k < j + DOTS_TO_WIN && s < DOTS_TO_WIN; k++, s++) {
-                        turn[s][0] = k;
-                        turn[s][1] = i;
-                        if (map[k][i] == DOT_X) {
-                            counter++;
-                            turn[s][2] = 1;
-                        } else if (map[k][i] == DOT_O) {
-                            turn[s][2] = 2;
-                        } else {
-                            turn[s][2] = 0;
-                        }
+                        counter = constuctTurn(s, k, i, counter, true);
                     }
                     turnDone = assign(counter,p, true);
                     if (turnDone) break;
@@ -240,16 +219,7 @@ public class Main {
             for (int j = 0; j <= SIZE - DOTS_TO_WIN; j++) {
                 counter = 0;
                 for (int k = j, s = 0; k < j + DOTS_TO_WIN && s < DOTS_TO_WIN; k++, s++) {
-                    turn[s][0] = k;
-                    turn[s][1] = k;
-                    if (map[k][k] == DOT_X) {
-                        counter++;
-                        turn[s][2] = 1;
-                    } else if (map[k][k] == DOT_O) {
-                        turn[s][2] = 2;
-                    } else {
-                        turn[s][2] = 0;
-                    }
+                    counter = constuctTurn(s, k, k, counter, true);
                 }
                 turnDone = assign(counter,p, true);
                 if (turnDone) break;
@@ -266,16 +236,7 @@ public class Main {
                 for (int j = 0; j <= SIZE - DOTS_TO_WIN - n; j++) {
                     counter = 0;
                     for (int k = j, s = 0; k < j + DOTS_TO_WIN - n && s < DOTS_TO_WIN; k++, s++) {
-                        turn[s][0] = k + n;
-                        turn[s][1] = k;
-                        if (map[k + n][k] == DOT_X) {
-                            counter++;
-                            turn[s][2] = 1;
-                        } else if (map[k + n][k] == DOT_O) {
-                            turn[s][2] = 2;
-                        } else {
-                            turn[s][2] = 0;
-                        }
+                        counter = constuctTurn(s, k + n, k, counter, true);
                     }
                     turnDone = assign(counter,p, true);
                     if (turnDone) break;
@@ -294,16 +255,7 @@ public class Main {
                 for (int j = 0; j <= SIZE - DOTS_TO_WIN - n; j++) {
                     counter = 0;
                     for (int k = j, s = 0; k < j + DOTS_TO_WIN - n && s < DOTS_TO_WIN; k++, s++) {
-                        turn[s][0] = k;
-                        turn[s][1] = k + n;
-                        if (map[k][k + n] == DOT_X) {
-                            counter++;
-                            turn[s][2] = 1;
-                        } else if (map[k][k + n] == DOT_O) {
-                            turn[s][2] = 2;
-                        } else {
-                            turn[s][2] = 0;
-                        }
+                        counter = constuctTurn(s, k, k + n, counter, true);
                     }
                     turnDone = assign(counter,p, true);
                     if (turnDone) break;
@@ -321,16 +273,7 @@ public class Main {
             for (int j = 0; j <= SIZE - DOTS_TO_WIN; j++) {
                 counter = 0;
                 for (int k = j, s = 0; k < j + DOTS_TO_WIN && s < DOTS_TO_WIN; k++, s++) {
-                    turn[s][0] = SIZE - k - 1;
-                    turn[s][1] = k;
-                    if (map[SIZE - k - 1][k] == DOT_X) {
-                        counter++;
-                        turn[s][2] = 1;
-                    } else if (map[SIZE - k - 1][k] == DOT_O) {
-                        turn[s][2] = 2;
-                    } else {
-                        turn[s][2] = 0;
-                    }
+                    counter = constuctTurn(s, SIZE - k - 1, k, counter, true);
                 }
                 turnDone = assign(counter,p, true);
                 if (turnDone) break;
@@ -347,16 +290,7 @@ public class Main {
                 for (int j = 0; j <= SIZE - DOTS_TO_WIN - n; j++) {
                     counter = 0;
                     for (int k = j, s = 0; k < j + DOTS_TO_WIN - n + 1 && s < DOTS_TO_WIN; k++, s++) {
-                        turn[s][0] = SIZE - k - 1;
-                        turn[s][1] = k + n;
-                        if (map[SIZE - k - 1][k + n] == DOT_X) {
-                            counter++;
-                            turn[s][2] = 1;
-                        } else if (map[SIZE - k - 1][k + n] == DOT_O) {
-                            turn[s][2] = 2;
-                        } else {
-                            turn[s][2] = 0;
-                        }
+                        counter = constuctTurn(s, SIZE - k - 1, k + n, counter, true);
                     }
                     turnDone = assign(counter,p, true);
                     if (turnDone) break;
@@ -375,16 +309,7 @@ public class Main {
                 for (int j = 0; j <= SIZE - DOTS_TO_WIN - n; j++) {
                     counter = 0;
                     for (int k = j, s = 0; k < j + DOTS_TO_WIN - n + 1 && s < DOTS_TO_WIN; k++, s++) {
-                        turn[s][0] = SIZE - k - 1 - n;
-                        turn[s][1] = k;
-                        if (map[SIZE - k - 1 - n][k] == DOT_X) {
-                            counter++;
-                            turn[s][2] = 1;
-                        } else if (map[SIZE - k - 1 - n][k] == DOT_O) {
-                            turn[s][2] = 2;
-                        } else {
-                            turn[s][2] = 0;
-                        }
+                        counter = constuctTurn(s, SIZE - k - 1 - n, k, counter, true);
                     }
                     turnDone = assign(counter,p, true);
                     if (turnDone) break;
@@ -403,16 +328,7 @@ public class Main {
             for (int j = 0; j <= SIZE - DOTS_TO_WIN; j++){
                 counter = 0;
                 for (int k = j, s = 0; k < j + DOTS_TO_WIN && s < DOTS_TO_WIN; k++, s++) {
-                    turn[s][0] = i;
-                    turn[s][1] = k;
-                    if (map[i][k] == DOT_X) {
-                        turn[s][2] = 1;
-                    } else if (map[i][k] == DOT_O) {
-                        turn[s][2] = 2;
-                        counter++;
-                    } else {
-                        turn[s][2] = 0;
-                    }
+                    counter = constuctTurn(s, i, k, counter, false);
                 }
                 turnDone = assign(counter,1, false);
                 if(turnDone) break;
@@ -428,16 +344,7 @@ public class Main {
             for (int j = 0; j <= SIZE - DOTS_TO_WIN; j++){
                 counter = 0;
                 for (int k = j, s = 0; k < j + DOTS_TO_WIN && s < DOTS_TO_WIN; k++, s++) {
-                    turn[s][0] = k;
-                    turn[s][1] = i;
-                    if (map[k][i] == DOT_X) {
-                        turn[s][2] = 1;
-                    } else if (map[k][i] == DOT_O) {
-                        turn[s][2] = 2;
-                        counter++;
-                    } else {
-                        turn[s][2] = 0;
-                    }
+                    counter = constuctTurn(s, k, i, counter, false);
                 }
                 turnDone = assign(counter,1, false);
                 if(turnDone) break;
@@ -452,16 +359,7 @@ public class Main {
         for (int j = 0; j <= SIZE - DOTS_TO_WIN; j++) {
             counter = 0;
             for (int k = j, s = 0; k < j + DOTS_TO_WIN && s < DOTS_TO_WIN; k++, s++) {
-                turn[s][0] = k;
-                turn[s][1] = k;
-                if (map[k][k] == DOT_X) {
-                    turn[s][2] = 1;
-                } else if (map[k][k] == DOT_O) {
-                    turn[s][2] = 2;
-                    counter++;
-                } else {
-                    turn[s][2] = 0;
-                }
+                counter = constuctTurn(s, k, k, counter, false);
             }
             turnDone = assign(counter,1, false);
         }
@@ -474,16 +372,7 @@ public class Main {
             for (int j = 0; j <= SIZE - DOTS_TO_WIN - n; j++) {
                 counter = 0;
                 for (int k = j, s = 0; k < j + DOTS_TO_WIN - n && s < DOTS_TO_WIN; k++, s++) {
-                    turn[s][0] = k + n;
-                    turn[s][1] = k;
-                    if (map[k + n][k] == DOT_X) {
-                        turn[s][2] = 1;
-                    } else if (map[k + n][k] == DOT_O) {
-                        turn[s][2] = 2;
-                        counter++;
-                    } else {
-                        turn[s][2] = 0;
-                    }
+                    counter = constuctTurn(s, k + n, k, counter, false);
                 }
                 turnDone = assign(counter,1, false);
                 if(turnDone) break;
@@ -499,16 +388,7 @@ public class Main {
             for (int j = 0; j <= SIZE - DOTS_TO_WIN - n; j++) {
                 counter = 0;
                 for (int k = j, s = 0; k < j + DOTS_TO_WIN - n && s < DOTS_TO_WIN; k++, s++) {
-                    turn[s][0] = k;
-                    turn[s][1] = k + n;
-                    if (map[k][k + n] == DOT_X) {
-                        turn[s][2] = 1;
-                    } else if (map[k][k + n] == DOT_O) {
-                        turn[s][2] = 2;
-                        counter++;
-                    } else {
-                        turn[s][2] = 0;
-                    }
+                    counter = constuctTurn(s, k, k + n, counter, false);
                 }
                 turnDone = assign(counter,1, false);
                 if(turnDone) break;
@@ -523,17 +403,7 @@ public class Main {
         for (int j = 0; j <= SIZE - DOTS_TO_WIN; j++) {
             counter = 0;
             for (int k = j, s = 0; k < j + DOTS_TO_WIN && s < DOTS_TO_WIN; k++, s++) {
-                turn[s][0] = SIZE - k - 1;
-                turn[s][1] = k;
-                if (map[SIZE - k - 1][k] == DOT_X) {
-                    turn[s][2] = 1;
-
-                } else if (map[SIZE - k - 1][k] == DOT_O) {
-                    turn[s][2] = 2;
-                    counter++;
-                } else {
-                    turn[s][2] = 0;
-                }
+                counter = constuctTurn(s, SIZE - k - 1, k, counter, false);
             }
             turnDone = assign(counter,1, false);
             if (turnDone) break;
@@ -547,16 +417,7 @@ public class Main {
             for (int j = 0; j <= SIZE - DOTS_TO_WIN - n; j++) {
                 counter = 0;
                 for (int k = j, s = 0; k < j + DOTS_TO_WIN - n + 1 && s < DOTS_TO_WIN; k++, s++) {
-                    turn[s][0] = SIZE - k - 1;
-                    turn[s][1] = k + n;
-                    if (map[SIZE - k - 1][k + n] == DOT_X) {
-                        turn[s][2] = 1;
-                    } else if (map[SIZE - k - 1][k + n] == DOT_O) {
-                        turn[s][2] = 2;
-                        counter++;
-                    } else {
-                        turn[s][2] = 0;
-                    }
+                    counter = constuctTurn(s, SIZE - k - 1, k + n, counter, false);
                 }
                 turnDone = assign(counter,1, false);
                 if (turnDone) break;
@@ -572,17 +433,7 @@ public class Main {
             for (int j = 0; j <= SIZE - DOTS_TO_WIN - n; j++) {
                 counter = 0;
                 for (int k = j, s = 0; k < j + DOTS_TO_WIN - n + 1 && s < DOTS_TO_WIN; k++, s++) {
-                    turn[s][0] = SIZE - k - 1 - n;
-                    turn[s][1] = k;
-                    if (map[SIZE - k - 1 - n][k] == DOT_X) {
-                        turn[s][2] = 1;
-
-                    } else if (map[SIZE - k - 1 - n][k] == DOT_O) {
-                        turn[s][2] = 2;
-                        counter++;
-                    } else {
-                        turn[s][2] = 0;
-                    }
+                    counter = constuctTurn(s, SIZE - k - 1 - n, k, counter, false);
                 }
                 turnDone = assign(counter,1, false);
                 if (turnDone) break;
@@ -604,5 +455,19 @@ public class Main {
             }
         }
         return false;
+    }
+    private static int constuctTurn(int s, int y, int x, int counter, boolean counterSwitch){
+        turn[s][0] = y;
+        turn[s][1] = x;
+        if (map[y][x] == DOT_X) {
+            if (counterSwitch) counter++;
+            turn[s][2] = 1;
+        } else if (map[y][x] == DOT_O) {
+            if (!counterSwitch) counter++;
+            turn[s][2] = 2;
+        } else {
+            turn[s][2] = 0;
+        }
+        return counter;
     }
 }
