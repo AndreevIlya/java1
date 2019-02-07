@@ -4,9 +4,19 @@ public abstract class Animal {
     int runDistance;
     int swimDistance;
     int jumpHeight;
+    int runDistanceRestriction;
+    int swimDistanceRestriction;
+    int jumpHeightRestriction;
+    String name;
 
-    public abstract void run(int runDistance);
-    public abstract void swim(int swimDistance);
-    public abstract void jump(int jumpHeight);
+    abstract void run(int runDistance);
+    abstract void swim(int swimDistance);
+    abstract void jump(int jumpHeight);
+    public void exercise(int runDistance, int swimDistance, int jumpHeight){
+        this.run(runDistance);
+        this.swim(swimDistance);
+        this.jump(jumpHeight);
+        System.out.println();
+    }
 
 }
