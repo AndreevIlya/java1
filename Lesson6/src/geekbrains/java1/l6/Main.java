@@ -2,6 +2,8 @@ package geekbrains.java1.l6;
 
 import geekbrains.java1.l6.Animals.Cat;
 import geekbrains.java1.l6.Animals.Hamster;
+import geekbrains.java1.l6.Animals.IAnimalLife;
+import geekbrains.java1.l6.Animals.StreetCat;
 
 public class Main {
 
@@ -24,5 +26,14 @@ public class Main {
 
         ham1.exercise(200,15,10);
         ham2.exercise(200,120,40);
+
+        StreetCat streetCat = new StreetCat(800,200,4);
+        streetCat.exercise(300,150,3);
+        streetCat.exercise(1300,400,10);
+
+        IAnimalLife[] animals = new IAnimalLife[] {cat1, cat2, cat3, ham1,ham2, streetCat};
+        for(IAnimalLife animal : animals){
+            animal.findFood();
+        }
     }
 }

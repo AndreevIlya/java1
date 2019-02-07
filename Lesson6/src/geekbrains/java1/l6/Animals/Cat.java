@@ -1,6 +1,6 @@
 package geekbrains.java1.l6.Animals;
 
-public class Cat extends Animal{
+public class Cat extends Animal implements IAnimalLife{
 
     public Cat(String name, int runDistanceRestriction, int jumpHeightRestriction){
         this.name = name;
@@ -29,5 +29,13 @@ public class Cat extends Animal{
         } else {
             System.out.println("Cat " + name + " jumped " + jumpHeight + " m.");
         }
+    }
+
+    @Override
+    public void findFood() {
+        System.out.println("Hello, i'm cat " + name + ". I should stop sleeping. Mmm... Where is my food?");
+        System.out.println("I went to that big white box, where food is stored. What to do to open it? Sure! MEEOOOOWW!!!");
+        System.out.println("They came and delivered food to me. That's their work.");
+        System.out.println();
     }
 }

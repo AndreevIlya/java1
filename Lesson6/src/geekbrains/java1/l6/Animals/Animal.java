@@ -1,9 +1,6 @@
 package geekbrains.java1.l6.Animals;
 
 public abstract class Animal {
-    int runDistance;
-    int swimDistance;
-    int jumpHeight;
     int runDistanceRestriction;
     int swimDistanceRestriction;
     int jumpHeightRestriction;
