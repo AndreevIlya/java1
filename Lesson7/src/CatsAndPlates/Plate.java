@@ -11,7 +11,7 @@ public class Plate {
     void removeFood(int removedFood) {
         food -= removedFood;
     }
-    public void addFood(int addedFood) {
+    void addFood(int addedFood) {
         System.out.printf("One put into the plate %d units of food.\n",addedFood);
         food += addedFood;
     }

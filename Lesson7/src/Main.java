@@ -3,6 +3,8 @@ import CatsAndPlates.Plate;
 
 import java.util.Random;
 
+import static CatsAndPlates.Cat.feedCats;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -15,19 +17,11 @@ public class Main {
         Cat cat6 = new Cat("Winter",random.nextInt(20) + 20);
         Cat[] cats = {cat1,cat2,cat3,cat4,cat5,cat6};
         Plate plate = new Plate(random.nextInt(50));
-        do{
-           plate.addFood(random.nextInt(15) + 5);
-           for(Cat cat : cats){
-               if(cat.isHungry()){
-                   cat.eat(plate);
-               }
-           }
-        }while(cat1.isHungry() ||
-                cat2.isHungry() ||
-                cat3.isHungry() ||
-                cat4.isHungry() ||
-                cat5.isHungry() ||
-                cat6.isHungry());
+
+        while(feedCats(plate, cats)){
+            System.out.println();
+        }
+
         System.out.println("\nAll the cats are fed!");
     }
 }
